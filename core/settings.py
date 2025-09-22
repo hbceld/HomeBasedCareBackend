@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     # apps
+    "users",
     'nurses',          
     'patients',        
     'appointments',    
@@ -115,5 +116,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "https://your-frontend-domain.com"
 ]
+
+AUTH_USER_MODEL = 'users.User'
+
+
 # During development you can allow all origins
 # CORS_ALLOW_ALL_ORIGINS = DEBUG
