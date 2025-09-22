@@ -1,13 +1,12 @@
 from pathlib import Path
-import os
 from decouple import config, Csv
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
+SECRET_KEY = config('SECRET_KEY', default='your-default-secret-key')
+DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
 
 # Application definition
@@ -22,16 +21,20 @@ INSTALLED_APPS = [
 
     # Third-party apps
     'rest_framework',
+    'rest_framework.authtoken',  # For TokenAuthentication
     'corsheaders',
 
-    # Your apps
-    'nurses',   # nurses login, profile, patient care
-    'patients', # patient login, family members, records
-    'coreapp',  # home-based care general app (appointments, services, bookings)
+    # apps
+    'nurses',          
+    'patients',        
+    'appointments',    
+    'authentications', 
+    'billing',         
+    'reports',         
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # Must be at top
+    'corsheaders.middleware.CorsMiddleware', 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,15 +64,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# Database
+# PostgreSQL Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT', cast=int),
+        'NAME': config('DB_NAME', default='nursecare'),
+        'USER': config('DB_USER', default='ednah'),
+        'PASSWORD': config('DB_PASSWORD', default='7maXS29IhEAwI2uGTFAHJ43dfPIJmUu1'),
+        'HOST': config('DB_HOST', default='dpg-d38jelur433s73fjv8ag-a.oregon-postgres.render.com'),
+        'PORT': config('DB_PORT', default=5432, cast=int),
     }
 }
 
@@ -112,6 +115,5 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "https://your-frontend-domain.com"
 ]
-
-# Optional: allow all during dev
+# During development you can allow all origins
 # CORS_ALLOW_ALL_ORIGINS = DEBUG
