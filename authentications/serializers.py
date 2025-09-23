@@ -2,6 +2,27 @@ from rest_framework import serializers
 from nurses.models import NurseProfile
 from patients.models import PatientProfile
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth import authenticate
+
+
+class AdminLoginSerializer(serializers.Serializer):
+    user_id = serializers.CharField()  # ✅ must match USERNAME_FIELD
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        user_id = data.get("user_id")
+        password = data.get("password")
+
+        # authenticate uses USERNAME_FIELD internally, works for custom User model
+        user = authenticate(username=user_id, password=password)
+        if user is None:
+            raise serializers.ValidationError("Invalid credentials.")
+
+        if not user.is_staff:
+            raise serializers.ValidationError("You are not authorized as admin.")
+
+        data["user"] = user
+        return data
 
 
 class NurseLoginSerializer(serializers.Serializer):
