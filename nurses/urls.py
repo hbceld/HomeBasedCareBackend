@@ -1,11 +1,5 @@
 from django.urls import path
-from .views import (
-    NurseListView,
-    NurseDetailView,
-    NurseCreateView,
-    NurseUpdateView,
-    NurseDeleteView,
-)
+from .views import NurseListView, NurseDetailView, NurseCreateView, NurseUpdateView, NurseDeleteView
 
 urlpatterns = [
     path("", NurseListView.as_view(), name="nurse-list"),
@@ -14,3 +8,4 @@ urlpatterns = [
     path("update/<int:pk>/", NurseUpdateView.as_view(), name="nurse-update"),
     path("delete/<int:pk>/", NurseDeleteView.as_view(), name="nurse-delete"),
 ]
+

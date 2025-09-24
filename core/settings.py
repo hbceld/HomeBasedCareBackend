@@ -26,16 +26,16 @@ INSTALLED_APPS = [
 
     # apps
     "users",
-    'nurses',          
-    'patients',        
-    'appointments',    
-    'authentications', 
-    'billing',         
-    'reports',         
+    'nurses',
+    'patients',
+    'appointments',
+    'authentications',
+    'billing',
+    'reports',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware', 
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -44,7 +44,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -104,30 +103,54 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Django REST Framework
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
     ],
 }
+
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "https://your-frontend-domain.com"
+    # production frontend(s) - replace with your actual frontend URL
+    "https://your-frontend-domain.com",
 ]
+
+# allow sending credentials from frontend
+CORS_ALLOW_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'users.User'
 
+# CSRF Trusted Origins
+# - include your deployed backend (https) and local dev hosts (http://localhost:8000)
 CSRF_TRUSTED_ORIGINS = [
-    "https://homebasedcarebackend.onrender.com",
-    "https://your-frontend-domain.com"
+     "https://homebasedcarebackend.onrender.com",   # production backend
+    "https://your-frontend-domain.com",            # production frontend
+    "http://127.0.0.1:8000",                       # local backend dev
+    "http://localhost:8000",
+    "http://127.0.0.1:3000",                       # local frontend dev ✅
+    "http://localhost:3000",                       # local frontend dev ✅
 ]
 
+# -----------------------------
+# Cookie security settings
+# -----------------------------
+# Use secure cookies only when DEBUG is False (production). This allows local testing over HTTP.
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 
+# For local development we'll use "Lax" (safer than None) so cookies work on http://localhost:8000.
+# In production you likely need "None" if frontend and backend are on different domains and you
+# intentionally want cross-site cookies (and both use HTTPS).
+SESSION_COOKIE_SAMESITE = "None" if not DEBUG else "Lax"
+CSRF_COOKIE_SAMESITE = "None" if not DEBUG else "Lax"
 
-# During development you can allow all origins
+# Keep cookies httpOnly (recommended)
+SESSION_COOKIE_HTTPONLY = True
+
+# During development you can allow all origins by uncommenting:
 # CORS_ALLOW_ALL_ORIGINS = DEBUG

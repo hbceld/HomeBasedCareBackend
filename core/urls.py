@@ -16,15 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/auth/", include("authentications.urls")),  # your existing auth routes
+
+    # 🔑 JWT authentication endpoints
+    path("api/auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+
+    # 🔗 App routes
+    path("api/auth/", include("authentications.urls")),  
     path("api/users/", include("users.urls")),
     path("api/nurses/", include("nurses.urls")),
     path("api/patients/", include("patients.urls")),
     path("api/appointments/", include("appointments.urls")),
     path("api/reports/", include("reports.urls")),
-    path("api/billing/", include("billing.urls")),  # billing API
+    path("api/billing/", include("billing.urls")),
 ]
+
 
