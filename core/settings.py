@@ -70,13 +70,19 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='nursecare'),
-        'USER': config('DB_USER', default='ednah'),
-        'PASSWORD': config('DB_PASSWORD', default='7maXS29IhEAwI2uGTFAHJ43dfPIJmUu1'),
-        'HOST': config('DB_HOST', default='dpg-d38jelur433s73fjv8ag-a.oregon-postgres.render.com'),
-        'PORT': config('DB_PORT', default=5432, cast=int),
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
+        'OPTIONS': {
+            'sslmode': config('DB_SSLMODE', default='require'),
+        },
     }
 }
+
+
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -128,7 +134,7 @@ AUTH_USER_MODEL = 'users.User'
 # CSRF Trusted Origins
 # - include your deployed backend (https) and local dev hosts (http://localhost:8000)
 CSRF_TRUSTED_ORIGINS = [
-     "https://homebasedcarebackend.onrender.com",   # production backend
+     "https://homebasedcare-g7b6hmbrb9gpb2d2.southafricanorth-01.azurewebsites.net",   # production backend
     "https://your-frontend-domain.com",            # production frontend
     "http://127.0.0.1:8000",                       # local backend dev
     "http://localhost:8000",

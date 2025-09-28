@@ -60,9 +60,13 @@ class Billing(models.Model):
     is_active = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
-        # Auto-calculate balance
-        self.balance = self.amount_due - self.amount_paid
+        if self.payment_status == "paid":
+            self.amount_paid = self.amount_due
+            self.balance = 0
+        else:
+            self.balance = self.amount_due - self.amount_paid
         super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"Billing {self.invoice_number or self.billing_id} - {self.patient.user.full_name}"

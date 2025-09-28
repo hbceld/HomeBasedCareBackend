@@ -32,7 +32,7 @@ class NurseCreateSerializer(serializers.ModelSerializer):
     # capture user info while creating nurse
     user_id = serializers.CharField(write_only=True)
     full_name = serializers.CharField(write_only=True)
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, style={'input_type': 'password'})
 
     class Meta:
         model = NurseProfile
@@ -51,18 +51,18 @@ class NurseCreateSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        from users.models import User
-
         user_id = validated_data.pop("user_id")
         full_name = validated_data.pop("full_name")
         password = validated_data.pop("password")
 
+        # ✅ Create the linked User
         user = User.objects.create_user(
-            user_id=user_id,
+            user_id=user_id,        # make sure User model has this field as USERNAME_FIELD
             full_name=full_name,
             role="nurse",
             password=password
         )
 
+        # ✅ Create NurseProfile linked to the User
         nurse = NurseProfile.objects.create(user=user, **validated_data)
         return nurse

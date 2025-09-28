@@ -1,10 +1,23 @@
 from rest_framework import serializers
 from .models import Report
+from nurses.models import NurseProfile
 
+# Nested serializer for nurse
+class NurseSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(source="user.full_name", read_only=True)
+
+    class Meta:
+        model = NurseProfile
+        fields = ["id", "full_name"]
 
 class ReportSerializer(serializers.ModelSerializer):
     patient_name = serializers.CharField(source="patient.user.full_name", read_only=True)
-    nurse_name = serializers.CharField(source="nurse.user.full_name", read_only=True)
+    nurse = NurseSerializer(read_only=True)  # nested object for frontend
+    created_at = serializers.DateTimeField(
+        source="date_time",  # map to your model field
+        format="%Y-%m-%dT%H:%M:%S%z",
+        read_only=True
+    )
 
     class Meta:
         model = Report
@@ -13,10 +26,9 @@ class ReportSerializer(serializers.ModelSerializer):
             "report_id",
             "patient",
             "patient_name",
-            "nurse",
-            "nurse_name",
+            "nurse",           # nested nurse object
             "report_type",
-            "date_time",
+            "created_at",      # frontend-friendly date field
             "shift",
             "observations",
             "care_provided",
@@ -28,3 +40,4 @@ class ReportSerializer(serializers.ModelSerializer):
             "verified_by",
             "is_finalized",
         ]
+

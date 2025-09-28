@@ -47,7 +47,8 @@ class Report(models.Model):
     medication_given = models.TextField(null=True, blank=True)
 
     # vitals can be JSON to allow flexible structure
-    vitals_recorded = models.JSONField(null=True, blank=True)
+    vitals_recorded = models.TextField(null=True, blank=True)
+
 
     recommendations = models.TextField(null=True, blank=True)
     attachments = models.FileField(upload_to="report_attachments/", null=True, blank=True)

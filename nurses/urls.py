@@ -1,11 +1,19 @@
-from django.urls import path
-from .views import NurseListView, NurseDetailView, NurseCreateView, NurseUpdateView, NurseDeleteView
+
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import (
+    NurseListView, NurseDetailView, NurseCreateView,
+    NurseUpdateView, NurseDeleteView, NurseLoginView, NurseViewSet
+)
+
+router = DefaultRouter()
+router.register(r"", NurseViewSet, basename="nurse")
 
 urlpatterns = [
-    path("", NurseListView.as_view(), name="nurse-list"),
-    path("<int:pk>/", NurseDetailView.as_view(), name="nurse-detail"),
-    path("create/", NurseCreateView.as_view(), name="nurse-create"),
-    path("update/<int:pk>/", NurseUpdateView.as_view(), name="nurse-update"),
-    path("delete/<int:pk>/", NurseDeleteView.as_view(), name="nurse-delete"),
+    # keep non-viewset views first
+    path("login/", NurseLoginView.as_view(), name="nurse-login"),
+
+    # include router AFTER
+    path("", include(router.urls)),
 ]
 
