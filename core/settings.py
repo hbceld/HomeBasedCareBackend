@@ -124,6 +124,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     # production frontend(s) - replace with your actual frontend URL
     "https://eldorethomebasedcare.netlify.app",
+    "https://eldorethomecare.co.ke", 
 ]
 
 # allow sending credentials from frontend
@@ -136,6 +137,7 @@ AUTH_USER_MODEL = 'users.User'
 CSRF_TRUSTED_ORIGINS = [
      "https://homebasedcare-g7b6hmbrb9gpb2d2.southafricanorth-01.azurewebsites.net",   # production backend
     "https://eldorethomebasedcare.netlify.app",            # production frontend
+    "https://eldorethomecare.co.ke",
     "http://127.0.0.1:8000",                       # local backend dev
     "http://localhost:8000",
     "http://127.0.0.1:3000",                       # local frontend dev ✅

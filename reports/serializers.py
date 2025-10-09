@@ -15,7 +15,7 @@ class ReportSerializer(serializers.ModelSerializer):
     nurse = NurseSerializer(read_only=True)  # nested object for frontend
     created_at = serializers.DateTimeField(
         source="date_time",  # map to your model field
-        format="%Y-%m-%dT%H:%M:%S%z",
+        format="%Y-%m-%d %H:%M:%S",
         read_only=True
     )
 

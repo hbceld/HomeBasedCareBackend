@@ -23,14 +23,18 @@ class ReportCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        """
-        Override create to ensure all fields are properly saved and the full object
-        is returned in the response.
-        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        report = serializer.save()
-        # Refresh from DB to get all default/auto-generated fields (like report_id, date_time)
+
+        nurse_profile = None
+        if hasattr(request.user, "nurseprofile"):
+            nurse_profile = request.user.nurseprofile
+
+        report = serializer.save(
+            nurse=nurse_profile,
+            created_by=nurse_profile
+        )
+
         report.refresh_from_db()
         return Response(ReportSerializer(report).data, status=status.HTTP_201_CREATED)
 
