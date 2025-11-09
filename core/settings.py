@@ -1,5 +1,6 @@
 from pathlib import Path
 from decouple import config, Csv
+import dj_database_url
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -67,19 +68,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # PostgreSQL Database
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
-        'OPTIONS': {
-            'sslmode': config('DB_SSLMODE', default='require'),
-        },
-    }
+    'default': dj_database_url.config(
+        default=config(
+            'DATABASE_URL',
+            default='postgresql://ehr_0xun_user:ri3Rd7m0fnNUaIHAcqBaN53dM5A2dSbN@dpg-d488o5ali9vc7395h5eg-a.oregon-postgres.render.com/ehr_0xun'
+        ),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
+
 
 
 
@@ -135,7 +136,7 @@ AUTH_USER_MODEL = 'users.User'
 # CSRF Trusted Origins
 # - include your deployed backend (https) and local dev hosts (http://localhost:8000)
 CSRF_TRUSTED_ORIGINS = [
-     "https://homebasedcare-g7b6hmbrb9gpb2d2.southafricanorth-01.azurewebsites.net",   # production backend
+    "https://homebasedcarebackend.onrender.com",
     "https://eldorethomebasedcare.netlify.app",            # production frontend
     "https://eldorethomecare.co.ke",
     "http://127.0.0.1:8000",                       # local backend dev
