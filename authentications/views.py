@@ -5,7 +5,8 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import NurseLoginSerializer, PatientLoginSerializer, AdminLoginSerializer
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 def get_tokens_for_user(user):
     """
@@ -51,7 +52,7 @@ class PatientLoginView(APIView):
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+@method_decorator(csrf_exempt, name="dispatch")
 class AdminLoginView(APIView):
     permission_classes = [AllowAny]
 
