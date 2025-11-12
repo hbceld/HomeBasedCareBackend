@@ -52,18 +52,20 @@ class PatientLoginView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# ✅ Admin login
 class AdminLoginView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        print("request.body:", request.body)  # raw body
+        print("request.data:", request.data)  # parsed JSON
+
         serializer = AdminLoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data["user"]
             tokens = get_tokens_for_user(user)
-
             return Response(
                 {"message": "Admin login successful", "user_id": user.id, "tokens": tokens},
                 status=status.HTTP_200_OK,
             )
+        print("serializer.errors:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
